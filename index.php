@@ -178,10 +178,10 @@ if (tep_not_null($image['catdesc'])) {
   echo '<div class="well well-sm">' . $image['catdesc'] . '</div>';
 }
 ?>
-<div class="contentContainer">
-  <div class="row">
+<div class="row">
   <?php echo $oscTemplate->getContent('index_products'); ?>
-  </div>
+</div>
+<div class="contentContainer">
 <?php
 // optional Product List Filter
     if (PRODUCT_LIST_FILTER > 0) {
