@@ -179,7 +179,9 @@ if (tep_not_null($image['catdesc'])) {
 }
 ?>
 <div class="contentContainer">
-
+  <div class="row">
+  <?php echo $oscTemplate->getContent('index_products'); ?>
+  </div>
 <?php
 // optional Product List Filter
     if (PRODUCT_LIST_FILTER > 0) {
