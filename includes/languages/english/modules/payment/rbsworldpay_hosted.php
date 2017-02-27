@@ -18,6 +18,28 @@
 
   define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_WARNING_DEMO_MODE', 'Transaction performed in test mode.');
 
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_CALLBACK_TITLE', 'WorldPay Hosted Payments');
   define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_SUCCESSFUL_TRANSACTION', 'The payment has been successfully performed! You will be automatically redirected back to our website in 3 seconds.');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_CANCEL_TRANSACTION', 'Payment processing cancelled in WorldPay. You will be automatically redirected back to your shopping cart in 3 seconds.');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_CANCEL', 'Cancelled in WorldPay. Please choose a payment method.');
   define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_CONTINUE_BUTTON', 'Continue to %s');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_RETURN_BUTTON', 'Return to %s');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_AVS_CVV', 'CVV: ');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_AVS_POSTCODE', 'Postcode: ');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_AVS_ADDRESS', 'Address: ');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_AVS_COUNTRY', 'Country match: ');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_AVS_0', 'Not supported');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_AVS_1', 'Not checked');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_AVS_2', 'Matched');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_AVS_4', 'Not matched');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_AVS_8', 'Partially matched');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_WAF', 'Risk: ');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_WAF_WARNING', 'Warning');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_WAF_CAUTION', 'Caution');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ARESPH', '3D secure: ');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ARESPH_0', 'Authenticated');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ARESPH_1', 'Not enrolled');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ARESPH_6', 'Service not available');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ARESPH_7', 'Not completed');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ARESPH_9', 'Failed');
 ?>
