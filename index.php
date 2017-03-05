@@ -157,29 +157,26 @@
       }
     }
 
-    $catname = HEADING_TITLE;
+    $subject_name = HEADING_TITLE;
     if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
-      $image = tep_db_query("select m.manufacturers_image, m.manufacturers_name as catname, mi.manufacturers_description as catdesc from manufacturers m, manufacturers_info mi where m.manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "' and m.manufacturers_id = mi.manufacturers_id and mi.languages_id = '" . (int)$languages_id . "'");
-      $image = tep_db_fetch_array($image);
-      $catname = $image['catname'];
+      $focus = tep_db_query("select m.manufacturers_image as image, m.manufacturers_name as name, mi.manufacturers_description as description from manufacturers m, manufacturers_info mi where m.manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "' and m.manufacturers_id = mi.manufacturers_id and mi.languages_id = '" . (int)$languages_id . "'");
+      $focus = tep_db_fetch_array($focus);
+      $focus_name = $focus['name'];
     } elseif ($current_category_id) {
-      $image = tep_db_query("select c.categories_image, cd.categories_name as catname, cd.categories_description as catdesc from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = '" . (int)$current_category_id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "'");
-      $image = tep_db_fetch_array($image);
-      $catname = $image['catname'];
+      $focus = tep_db_query("select c.categories_image as image, cd.categories_name as name, cd.categories_description as description from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = '" . (int)$current_category_id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "'");
+      $focus = tep_db_fetch_array($focus);
+      $focus_name = $focus['name'];
     }
 ?>
 
 <div class="page-header">
-  <h1><?php echo $catname; ?></h1>
+  <h1><?php echo $focus_name; ?></h1>
 </div>
 
-<?php
-if (tep_not_null($image['catdesc'])) {
-  echo '<div class="well well-sm">' . $image['catdesc'] . '</div>';
-}
-?>
+<div class="row">
+  <?php echo $oscTemplate->getContent('index_products'); ?>
+</div>
 <div class="contentContainer">
-
 <?php
 // optional Product List Filter
     if (PRODUCT_LIST_FILTER > 0) {
