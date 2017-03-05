@@ -33,7 +33,7 @@
     }
 
     function execute() {
-      global $oscTemplate, $image, $languages_id;
+      global $oscTemplate, $image, $focus, $languages_id, $catname;
       
       $content_width  = MODULE_CONTENT_IP_MANUFACTURER_IMAGE_CONTENT_WIDTH;
       $promo = MODULE_CONTENT_IP_MANUFACTURER_IMAGE_CONTENT_WIDTH_EACH;
@@ -41,7 +41,16 @@
       
       if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
 			
-        ob_start();
+        $pic = '';
+				if (isset($focus) && is_array($focus) && isset($focus['image'])) {
+				  $pic = $focus['image'];
+					$name = $focus['name'];
+				} elseif (isset($image) && is_array($image) && isset($image['manufacturers_image'])) {
+				  $pic = $image['manufacturers_image'];
+					$name = $catname;
+				}
+				  
+				ob_start();
         include('includes/modules/content/' . $this->group . '/templates/manufacturer_image.php');
         $template = ob_get_clean();
 
