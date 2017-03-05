@@ -50,11 +50,13 @@
 					$name = $catname;
 				}
 				  
-				ob_start();
-        include('includes/modules/content/' . $this->group . '/templates/manufacturer_image.php');
-        $template = ob_get_clean();
+				if (strlen($pic)) {
+				  ob_start();
+          include('includes/modules/content/' . $this->group . '/templates/manufacturer_image.php');
+          $template = ob_get_clean();
 
-        $oscTemplate->addContent($template, $this->group);
+          $oscTemplate->addContent($template, $this->group);
+				}
 			}
     }
 
