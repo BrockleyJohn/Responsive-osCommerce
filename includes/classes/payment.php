@@ -14,11 +14,20 @@
     var $modules, $selected_module;
 
 // class constructor
-    function payment($module = '') {
-      global $payment, $language, $PHP_SELF;
+    function __construct($module = '') {
+      global $payment, $shipping, $language, $PHP_SELF;
 
       if (defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED)) {
-        $this->modules = explode(';', MODULE_PAYMENT_INSTALLED);
+
+        require('includes/classes/ship2pay.php');
+        $my_ship2pay = new ship2pay;
+				$arrship=explode('_',$shipping['id']);
+				$ship2pay_mods = $my_ship2pay->get_pay_modules($arrship[0]);
+				if (tep_not_null($ship2pay_mods)) {
+					$this->modules = explode(';', $ship2pay_mods);
+				} else {
+				  $this->modules = explode(';', MODULE_PAYMENT_INSTALLED);
+				}
 
         $include_modules = array();
 
