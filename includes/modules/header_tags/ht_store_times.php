@@ -55,7 +55,7 @@
         
           if (in_array(basename($PHP_SELF), $pages_array)) {
 		        $store_status = sew_is_store_open();
-            if ($store_status <> 'open') tep_redirect('store_times.php');
+            if ($store_status <> 'open' && $store_status <> 'open-override') tep_redirect('store_times.php');
           }
         }
       }
