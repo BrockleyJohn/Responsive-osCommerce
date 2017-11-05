@@ -61,12 +61,12 @@
 				 $order_list .= '</table>'."\n";
 
           $tab_title = addslashes(TAB_CUSTOMER_ORDERS);
-          $tab_link = substr(tep_href_link('orders.php', tep_get_all_get_params()), strlen($base_url)) . '#section_customer_orders';
+          $tab_link = tep_href_link('orders.php', tep_get_all_get_params()) . '#section_customer_orders';
 
           $output = <<<EOD
 <script>
 $(function() {
-  $('#orderTabs ul').append('<li><a href="{$tab_link}">{$tab_title}</a></li>');
+  $('#orderTabs ul:first').append('<li><a href="{$tab_link}">{$tab_title}</a></li>');
 });
 </script>
 
