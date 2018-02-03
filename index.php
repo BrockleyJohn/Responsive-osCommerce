@@ -99,7 +99,9 @@
           break;
       }
     }
-
+		
+// P2C-SORT-EDIT-1
+		$p2c = true;
 // show the products of a specified manufacturer
     if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
       if (isset($_GET['filter_id']) && tep_not_null($_GET['filter_id'])) {
@@ -108,6 +110,8 @@
       } else {
 // We show them all
         $listing_sql = "select " . $select_column_list . " p.products_id, SUBSTRING_INDEX(pd.products_description, ' ', 20) as products_description, p.manufacturers_id, p.products_price, p.products_tax_class_id, IF(s.status, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status, s.specials_new_products_price, p.products_price) as final_price, p.products_quantity as in_stock, if(s.status, 1, 0) as is_special from " . TABLE_PRODUCTS . " p left join " . TABLE_SPECIALS . " s on p.products_id = s.products_id, " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_MANUFACTURERS . " m where p.products_status = '1' and pd.products_id = p.products_id and pd.language_id = '" . (int)$languages_id . "' and p.manufacturers_id = m.manufacturers_id and m.manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "'";
+// P2C-SORT-EDIT-2
+				$p2c = false;
       }
     } else {
 // show the products in a given categorie
@@ -121,6 +125,12 @@
     }
 
     if ( (!isset($_GET['sort'])) || (!preg_match('/^[1-8][ad]$/', $_GET['sort'])) || (substr($_GET['sort'], 0, 1) > sizeof($column_list)) ) {
+// P2C-SORT-EDIT-3
+			if ($p2c) { 
+				$listing_sql .= " order by p2c.products_sort_order, pd.products_name";
+				$HTTP_GET_VARS['sort'] = '0a';
+			} else {
+				$listing_sql .= " order by pd.products_name";
       for ($i=0, $n=sizeof($column_list); $i<$n; $i++) {
         if ($column_list[$i] == 'PRODUCT_LIST_NAME') {
           $_GET['sort'] = $i+1 . 'a';
@@ -128,6 +138,7 @@
           break;
         }
       }
+      } 
     } else {
       $sort_col = substr($_GET['sort'], 0 , 1);
       $sort_order = substr($_GET['sort'], 1);
