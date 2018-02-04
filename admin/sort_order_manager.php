@@ -19,6 +19,10 @@
 */
 
 	include('includes/application_top.php');
+
+// Edge compatibility
+  if (!defined('DIR_WS_INCLUDES')) define('DIR_WS_INCLUDES','includes/');
+  if (!defined('DIR_WS_IMAGES')) define('DIR_WS_IMAGES','images/');
 	
 	// check for database mods
 	if (tep_db_num_rows(tep_db_query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='". DB_DATABASE . "' AND TABLE_NAME='products_to_categories' AND COLUMN_NAME LIKE 'products_sort_order'")) != 1 ) {
