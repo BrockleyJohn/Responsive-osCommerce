@@ -37,6 +37,7 @@
 # php_value session.use_trans_sid 0
 # php_value register_globals 1
 
+
 <IfModule mod_headers.c>
   Header unset ETag
 </IfModule>
@@ -60,3 +61,40 @@ ExpiresDefault "access plus 2 days"
 </IfModule>
 ## EXPIRES CACHING ##
 
+# Begin Ultimate SEO V2.2d 
+Options +FollowSymLinks
+RewriteEngine On 
+
+  # RewriteBase instructions 
+  # Change RewriteBase dependent on how your shop is accessed as below. 
+  # http://www.mysite.com = RewriteBase / 
+  # http://www.mysite.com/catalog/ = RewriteBase /catalog/  
+  # http://www.mysite.com/catalog/shop/ = RewriteBase /catalog/shop/ 
+
+  # Change the following line using the instructions above  
+  
+RewriteBase /gitresdev/
+
+RewriteRule ^(.*)-p-(.*).html$ product_info.php?products_id=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-c-(.*).html$ index.php?cPath=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-m-(.*).html$ index.php?manufacturers_id=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-pi-(.*).html$ popup_image.php?pID=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-by-(.*).html$ all-products.php?fl=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-t-(.*).html$ articles.php?tPath=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-a-(.*).html$ article_info.php?articles_id=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-au-(.*).html$ articles.php?authors_id=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-pr-(.*).html$ product_reviews.php?products_id=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-pri-(.*).html$ product_reviews_info.php?products_id=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-f-(.*).html$ faqdesk_info.php?faqdesk_id=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-fc-(.*).html$ faqdesk_index.php?faqPath=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-fri-(.*).html$ faqdesk_reviews_info.php?faqdesk_id=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-fra-(.*).html$ faqdesk_reviews_article.php?faqdesk_id=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-i-(.*).html$ information.php?info_id=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-links-(.*).html$ links.php?lPath=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-pm-([0-9]+).html$ info_pages.php?pages_id=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-n-(.*).html$ newsdesk_info.php?newsdesk_id=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-nc-(.*).html$ newsdesk_index.php?newsPath=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-nri-(.*).html$ newsdesk_reviews_info.php?newsdesk_id=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-nra-(.*).html$ newsdesk_reviews_article.php?newsdesk_id=$2&%{QUERY_STRING}
+RewriteRule ^(.*)-po-([0-9]+).html$ pollbooth.php?pollid=$2&%{QUERY_STRING}
+# End Ultimate SEO V2.2d

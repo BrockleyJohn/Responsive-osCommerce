@@ -293,6 +293,14 @@
   require('includes/languages/' . $language . '.php');
   setlocale(LC_NUMERIC, $_system_locale_numeric); // Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
 
+ // Ultimate SEO URLs v2.2d
+ if ((!defined(SEO_ENABLED)) || (SEO_ENABLED == 'true')) {
+   include_once(DIR_WS_CLASSES . 'seo.class.php');
+   if ( !is_object($seo_urls) ){
+     $seo_urls = new SEO_URL($languages_id);
+   }
+ }
+
 // currency
   if (!tep_session_is_registered('currency') || isset($_GET['currency']) || ( (USE_DEFAULT_LANGUAGE_CURRENCY == 'true') && (LANGUAGE_CURRENCY != $currency) ) ) {
     if (!tep_session_is_registered('currency')) tep_session_register('currency');

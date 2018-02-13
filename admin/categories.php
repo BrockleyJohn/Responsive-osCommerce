@@ -17,6 +17,10 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
+// Ultimate SEO URLs v2.2d
+// If the action will affect the cache entries
+   if ( preg_match("/(insert|update|setflag)/i", $action) ) include_once('includes/reset_seo_cache.php');
+
   if (tep_not_null($action)) {
     switch ($action) {
       case 'setflag':
