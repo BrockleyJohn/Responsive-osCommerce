@@ -1,5 +1,10 @@
 <?php
 define('USE_SEO_REDIRECT_DEBUG', 'false');
+if (! defined('FILENAME_DEFAULT')) define('FILENAME_DEFAULT','index.php');
+if (! defined('FILENAME_PRODUCT_INFO')) define('FILENAME_PRODUCT_INFO','product_info.php');
+if (! defined('FILENAME_POPUP_IMAGE')) define('FILENAME_POPUP_IMAGE','popup_image.php');
+if (! defined('FILENAME_PRODUCT_REVIEWS')) define('FILENAME_PRODUCT_REVIEWS','product_reviews.php');
+if (! defined('FILENAME_PRODUCT_REVIEWS_INFO')) define('FILENAME_PRODUCT_REVIEWS_INFO','product_reviews.php');
 /**
  * Ultimate SEO URLs Contribution - osCommerce MS-2.2
  *

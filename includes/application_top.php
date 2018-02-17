@@ -295,7 +295,7 @@
 
  // Ultimate SEO URLs v2.2d
  if ((!defined(SEO_ENABLED)) || (SEO_ENABLED == 'true')) {
-   include_once(DIR_WS_CLASSES . 'seo.class.php');
+   include_once('includes/classes/seo.class.php');
    if ( !is_object($seo_urls) ){
      $seo_urls = new SEO_URL($languages_id);
    }
