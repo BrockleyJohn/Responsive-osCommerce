@@ -130,7 +130,6 @@
 				$listing_sql .= " order by p2c.products_sort_order, pd.products_name";
 				$_GET['sort'] = '0a';
 			} else {
-				$listing_sql .= " order by pd.products_name";
       for ($i=0, $n=sizeof($column_list); $i<$n; $i++) {
         if ($column_list[$i] == 'PRODUCT_LIST_NAME') {
           $_GET['sort'] = $i+1 . 'a';
