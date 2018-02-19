@@ -1,2 +1,88 @@
-/* user.css ----------------------------------------------------------------- */
+/* use this for all changes to look of websit */
+
+.footer-extra {
+    background: #E92121 none repeat scroll 0% 0%;
+    color: #fff; /*#C0C0C0;  */
+    line-height: 3;
+                   }
+                   
+                   /* top nav bar color change */
+.navbar-inverse {
+    background-color: #E92121;
+    border-color: transparent;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+} 
+/* copyright footer color change */
+
+.footer{
+       background: #ccffcc none repeat scroll 0% 0%;
+    background-color: #ccffcc;
+    background-image: none;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    background-position: 0% 0%;
+    background-clip: border-box;
+    background-origin: padding-box;
+    background-size: auto auto;
+    
+    border-top: 2px solid #ccffcc;
+    border-top-width: 2px;
+    border-top-style: solid;
+    border-top-color: #ccffcc;
+} 
+
+.searchbox-margin {
+    margin-bottom: 1px;
+    margin-top: 1px;
+    
+    } 
+.panel {
+    background-color: #e4f2dd;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1px;
+    }
+    
+.panel-body {
+    padding: 1px;
+}
+
+.breadcrumb {
+    background-color: #f6bcbc;
+    border-radius: 4px;
+    list-style: outside none none;
+    margin-bottom: 10px;
+    padding: 8px 15px;
+}
+/* top nav bar color change */
+.breadcrumb{padding:8px 15px;margin-bottom:1px;list-style:none;background-color:#f6bcbc;border-radius:1px} /*#f6bcbc #aaefad*/
+
+.productSpecialPrice  {
+  color: red;
+}
+.productHolder h2 {
+    font-size: 1.08em;
+}
+.grid-group-item .list-group-item-text { display: block; }
+.grid-group-item p.list-group-item-text { display: none; }
+
+.dl-horizontal dt {
+    float: left;
+    width: 60px;
+    clear: left;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dl-horizontal dd {
+    margin-left: 10px;
+    text-align: left;
+}
+
 
