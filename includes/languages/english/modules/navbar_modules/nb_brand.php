@@ -13,5 +13,5 @@
   define('MODULE_NAVBAR_BRAND_TITLE', 'Brand');
   define('MODULE_NAVBAR_BRAND_DESCRIPTION', 'Show Brand in Navbar.  <div class="secWarning">This can be a simple link or something more complicated such as an image.<br><br>For more details about using an image, see <a target="_blank" href="http://getbootstrap.com/components/#navbar-brand-image"><u>#navbar-brand-image</u></a></div>');
   
-  define('MODULE_NAVBAR_BRAND_PUBLIC_TEXT', '<a class="navbar-brand" href="' . tep_href_link('index.php') . '">' . STORE_NAME . '</a>');
+  define('MODULE_NAVBAR_BRAND_PUBLIC_TEXT', '<a class="navbar-brand" href="' . tep_href_link('index.php') . '">' . tep_image('images/' . STORE_LOGO, htmlspecialchars(STORE_NAME)) . '</a>');
   

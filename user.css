@@ -15,6 +15,19 @@
         border-bottom-color: transparent;
         border-left-color: transparent;
 } 
+.navbar-brand {
+	background-color: #fff;
+}
+.navbar-brand img {
+  margin-top: -14px;
+}
+.navbar-search {
+  margin-top: 8px;
+}
+.navbar {
+  margin-bottom: 0;
+}
+
 /* copyright footer color change */
 
 .footer{
