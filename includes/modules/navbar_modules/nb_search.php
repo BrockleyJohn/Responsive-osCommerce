@@ -46,7 +46,7 @@
     function getOutput() {
       global $oscTemplate, $request_type;
       
-      $search_box = '<li class="navbar-search">' . tep_draw_form('quick_find', tep_href_link('advanced_search_result.php', '', $request_type, false), 'get', 'class="form-horizontal"');
+      $search_box = '<li class="navbar-search">' . tep_draw_form('quick_find', tep_href_link('advanced_search_result.php', '', $request_type, false), 'get', 'class="navbar-form"');
       $search_box .= '<div class="input-group">' . tep_draw_input_field('keywords', '', 'required placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"', 'search') . '<span class="input-group-btn"><button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button></span></div>';
       $search_box .=  tep_hide_session_id() . '</form></li>';
 			
