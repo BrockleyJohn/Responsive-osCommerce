@@ -33,6 +33,10 @@
     switch ($action) {
       case 'save':
         foreach ($_POST['configuration'] as $key => $value) {
+          // USPS START
+          if (is_array($value))
+            $value = implode(', ', $value);
+          // USPS END
           tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . $value . "' where configuration_key = '" . $key . "'");
         }
         tep_redirect(tep_href_link('modules.php', 'set=' . $set . '&module=' . $_GET['module']));
@@ -250,7 +254,22 @@
       $heading[] = array('text' => '<strong>' . $mInfo->title . '</strong>');
 
       $contents = array('form' => tep_draw_form('modules', 'modules.php', 'set=' . $set . '&module=' . $_GET['module'] . '&action=save'));
-      $contents[] = array('text' => $keys);
+// USPS START
+                $contents[] = array('text' => '<br>' . $keys);
+  /*      $contents[] = array (
+          'text' => '<br />' . preg_replace(array (
+            '/RM/',
+            '/TM/',
+            '/International/',
+            '/Envelope/'
+          ), array (
+            '&reg;',
+            '&trade;',
+            'Int\'l',
+            'Env'
+          ), $keys)
+        ); */
+// USPS END
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link('modules.php', 'set=' . $set . '&module=' . $_GET['module'])));
       break;
     default:
@@ -290,7 +309,22 @@
         }
 
         $contents[] = array('text' => '<br />' . $mInfo->description);
-        $contents[] = array('text' => '<br />' . $keys);
+        // USPS START
+        //        $contents[] = array('text' => '<br>' . $keys);
+        $contents[] = array (
+          'text' => '<br />' . preg_replace(array (
+            '/RM/',
+            '/TM/',
+            '/International/',
+            '/Envelope/'
+          ), array (
+            '&reg;',
+            '&trade;',
+            'Int\'l',
+            'Env'
+          ), $keys)
+        );
+        // USPS END
       } elseif (isset($_GET['list']) && ($_GET['list'] == 'new')) {
         if (isset($mInfo)) {
           $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_MODULE_INSTALL, 'plus', tep_href_link('modules.php', 'set=' . $set . '&module=' . $mInfo->code . '&action=install')));
