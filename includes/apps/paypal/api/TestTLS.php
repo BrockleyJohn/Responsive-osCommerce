@@ -1,6 +1,9 @@
 <?php
 /*
   $Id$
+	Author: @BrockleyJohn john@sewebsites.net
+	
+	Call to check on TLS version being used in calls from app
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
@@ -10,21 +13,20 @@
   Released under the GNU General Public License
 */
 
-  function OSCOM_PayPal_DP_Api_DoDirectPayment($OSCOM_PayPal, $server, $extra_params) {
-    if ( $server == 'live' ) {
+  function OSCOM_PayPal_Api_TestTLS($OSCOM_PayPal, $server, $extra_params) {
+  /*  if ( $server == 'live' ) {
       $api_url = 'https://api-3t.paypal.com/nvp';
     } else {
       $api_url = 'https://api-3t.sandbox.paypal.com/nvp';
-    }
+    } */
+    $api_url = 'https://tlstest.paypal.com/';
 
-    $params = array('USER' => $OSCOM_PayPal->getCredentials('DP', 'username'),
-                    'PWD' => $OSCOM_PayPal->getCredentials('DP', 'password'),
-                    'SIGNATURE' => $OSCOM_PayPal->getCredentials('DP', 'signature'),
+    $params = array('USER' => $OSCOM_PayPal->getApiCredentials($server, 'username'),
+                    'PWD' => $OSCOM_PayPal->getApiCredentials($server, 'password'),
+                    'SIGNATURE' => $OSCOM_PayPal->getApiCredentials($server, 'signature'),
                     'VERSION' => $OSCOM_PayPal->getApiVersion(),
-                    'METHOD' => 'DoDirectPayment',
-                    'PAYMENTACTION' => (OSCOM_APP_PAYPAL_DP_TRANSACTION_METHOD == '1') ? 'Sale' : 'Authorization',
-                    'IPADDRESS' => $OSCOM_PayPal->getIpAddress(),
-                    'BUTTONSOURCE' => $OSCOM_PayPal->getIdentifier());
+                    'METHOD' => 'GetBalance',
+                    'RETURNALLCURRENCIES' => '1');
 
     if ( is_array($extra_params) && !empty($extra_params) ) {
       $params = array_merge($params, $extra_params);
@@ -38,7 +40,7 @@
 
     $post_string = substr($post_string, 0, -1);
 
-    $response = $OSCOM_PayPal->makeApiCall($api_url, $post_string);
+    $response = $OSCOM_PayPal->makeApiCall($api_url, $post_string, null, true);
     parse_str($response, $response_array);
 
     return array('res' => $response_array,
