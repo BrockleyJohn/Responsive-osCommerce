@@ -33,7 +33,7 @@
 	if ($_POST['cat_sort_order_update']) {
 		//set counter
 		$sort_i = 0;
-		while (list($key, $value) = each($_POST['cat_sort_order_update'])) {
+		foreach($_POST['cat_sort_order_update'] as $key => $value) {
 			tep_db_query("UPDATE ".TABLE_CATEGORIES." SET sort_order = ".(int)$value." WHERE categories_id = ".(int)$key);
 			$sort_i++;
 		}
@@ -43,7 +43,7 @@
 	if ($_POST['prod_sort_order_update']) {
 		//set counter
 		$sort_i = 0;
-		while (list($key, $value) = each($_POST['prod_sort_order_update'])) {
+		foreach($_POST['prod_sort_order_update'] as $key => $value) {
 			tep_db_query("UPDATE ".TABLE_PRODUCTS_TO_CATEGORIES." SET products_sort_order = ".(int)$value." WHERE products_id = ".(int)$key." AND categories_id=".(int)$current_category_id);
 			$sort_i++;
 		}
@@ -95,9 +95,11 @@
 
       // get all active prods in that specific category
 
-       $sql2 = tep_db_query("SELECT p.products_id, p.products_model, p. products_quantity, p.products_status, p2c.products_sort_order, p.products_image, pd.products_name from products p, products_to_categories p2c, products_description pd where p.products_id = p2c.products_id and p.products_id = pd.products_id and language_id = $languages_id and p2c.categories_id = '" . (int)$current_category_id . "' order by p2c.products_sort_order, pd.products_name");
+    $product_query_raw = "SELECT p.products_id, p.products_model, p. products_quantity, p.products_status, p2c.products_sort_order, p.products_image, pd.products_name from products p, products_to_categories p2c, products_description pd where p.products_id = p2c.products_id and p.products_id = pd.products_id and language_id = $languages_id and p2c.categories_id = '" . (int)$current_category_id . "' order by p2c.products_sort_order, pd.products_name";
+    $product_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $product_query_raw, $product_query_numrows);
+    $product_query = tep_db_query($product_query_raw);
 
-     while ($results = tep_db_fetch_array($sql2)) {
+     while ($results = tep_db_fetch_array($product_query)) {
 						 echo '<tr class="dataTableRow"><td class="dataTableContent" align="center">' . $results['products_id'] . '</td>';
              echo '<td class="dataTableContent" align="center">' . tep_image(DIR_WS_CATALOG . DIR_WS_IMAGES . $results['products_image'], 'ID  ' . $results['products_id'] . ': ' . $results['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</td>';
 						 echo '<td class="dataTableContent">' . $results['products_name'] . '</td>';
@@ -109,6 +111,14 @@
   echo tep_draw_button(IMAGE_UPDATE, 'disk', null, 'primary') . '</td></tr>';
 
 ?>
+      <tr>
+        <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
+          <tr>
+            <td class="smallText" valign="top"><?php echo $product_split->display_count($product_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
+            <td class="smallText" align="right"><?php echo $product_split->display_links($product_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], tep_get_all_get_params(array('page'))); ?></td>
+          </tr>
+        </table></td>
+      </tr>
     </table>
   </form></td>
 </tr></table></td>
