@@ -27,4 +27,6 @@ define('HEADING_TITLE_GOTO', 'Go To:');
 define('TABLE_HEADING_CATEGORIES_PRODUCTS', 'Categories / Products ID');
 define('TABLE_HEADING_MODEL', 'Model');
 define('TABLE_HEADING_SORT_ORDER', 'Sort Order');
+define('TEXT_VIEW_PAGED','View paged');
+define('TEXT_VIEW_ALL','View all');
 ?>

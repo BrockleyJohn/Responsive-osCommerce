@@ -29,6 +29,18 @@
 		tep_db_query("alter table products_to_categories add column `products_sort_order` INT(11) NOT NULL DEFAULT '0' AFTER `categories_id`");
 			$messageStack->add(MSG_DB_UPDATED, 'success');
 	}
+	// check for setting
+	if (!defined('ADDON_SORT_ORDER_MANAGER_VIEW_PAGED')) {
+  	tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Sort Order Manager View Paged', 'ADDON_SORT_ORDER_MANAGER_VIEW_PAGED', 'False', 'Do you want to page the view of products in a category in Sort Order Manager?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
+		define('ADDON_SORT_ORDER_MANAGER_VIEW_PAGED','False');
+	}
+
+	if (isset($_GET['paged']) && ($_GET['paged'] == 'True' || $_GET['paged'] == 'False')) {
+		tep_db_query("update configuration set configuration_value = '" . $_GET['paged'] . "' where configuration_key = 'ADDON_SORT_ORDER_MANAGER_VIEW_PAGED'");
+		$paged = $_GET['paged'];
+	} else {
+		$paged = ADDON_SORT_ORDER_MANAGER_VIEW_PAGED;
+	}
 		
 	if ($_POST['cat_sort_order_update']) {
 		//set counter
@@ -57,7 +69,8 @@
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', 1, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading" align="right"><?php 
+							echo tep_draw_separator('pixel_trans.gif', 1, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
           <tr>
             <td>
@@ -65,6 +78,14 @@
     echo tep_draw_form('goto', 'sort_order_manager.php', '', 'get');
     echo HEADING_TITLE_GOTO . ' ' . tep_draw_pull_down_menu('cPath', tep_get_category_tree(), $current_category_id, 'onchange="this.form.submit();"');
     echo tep_hide_session_id() . '</form>';
+?>
+            </td>
+            <td align="right">
+<?php
+		echo tep_draw_form('sort_view', 'sort_order_manager.php', '', 'get');
+		if (isset($cPath)) echo tep_draw_hidden_field('cPath',$cPath);
+		echo TEXT_VIEW_PAGED . ' ' . tep_draw_radio_field('paged', 'True', false, $paged) . ' ' . tep_draw_radio_field('paged', 'False', false, $paged) . ' ' . TEXT_VIEW_ALL;
+		echo tep_hide_session_id() . '</form>';
 ?>
             </td>
           </tr>
@@ -96,7 +117,7 @@
       // get all active prods in that specific category
 
     $product_query_raw = "SELECT p.products_id, p.products_model, p. products_quantity, p.products_status, p2c.products_sort_order, p.products_image, pd.products_name from products p, products_to_categories p2c, products_description pd where p.products_id = p2c.products_id and p.products_id = pd.products_id and language_id = $languages_id and p2c.categories_id = '" . (int)$current_category_id . "' order by p2c.products_sort_order, pd.products_name";
-    $product_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $product_query_raw, $product_query_numrows);
+    if ($paged == 'True') $product_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $product_query_raw, $product_query_numrows);
     $product_query = tep_db_query($product_query_raw);
 
      while ($results = tep_db_fetch_array($product_query)) {
@@ -110,6 +131,7 @@
   echo '<td class="smalltext" align="right" colspan="10"><br><br><br><br>';
   echo tep_draw_button(IMAGE_UPDATE, 'disk', null, 'primary') . '</td></tr>';
 
+	if ($paged == 'True') {
 ?>
       <tr>
         <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -118,12 +140,19 @@
             <td class="smallText" align="right"><?php echo $product_split->display_links($product_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], tep_get_all_get_params(array('page'))); ?></td>
           </tr>
         </table></td>
-      </tr>
+      </tr><?php } ?>
     </table>
   </form></td>
 </tr></table></td>
 	</tr>
 </table>
+<script type='text/javascript'>
+ $(document).ready(function() { 
+   $('input[name=paged]').change(function(){
+        $('form[name=sort_view]').submit();
+   });
+  });
+</script>
 <?php
   require(DIR_WS_INCLUDES . 'template_bottom.php');
   require(DIR_WS_INCLUDES . 'application_bottom.php');
