@@ -5,11 +5,14 @@
 	- category within parent (standard)
 	- product sort order within category (on products_to_categories)
 	Author: BrockleyJohn john@sewebsites.net
+	
+	File version 2.2 for addon version 1.1
+	- add paging and option
    
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2015 osCommerce
+  Copyright (c) 2018 osCommerce
 
   Released under the GNU General Public License
 
