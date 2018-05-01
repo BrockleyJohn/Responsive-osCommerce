@@ -65,7 +65,7 @@ class SEO_DataBase{
  * @param string $db
  * @param string $pass  
  */        
-	    function SEO_DataBase($host, $user, $db, $pass){
+	    function __construct($host, $user, $db, $pass){
 			    $this->host = $host;
 			    $this->user = $user;
 			    $this->db = $db;
@@ -257,7 +257,7 @@ class SEO_URL_INSTALLER{
  * @author Bobby Easland 
  * @version 1.1
  */        
-        function SEO_URL_INSTALLER(){
+        function __construct(){
                 
                 $this->attributes = array();
                 
@@ -557,7 +557,7 @@ class SEO_URL{
  * @version 1.1
  * @param integer $languages_id
  */
-        function SEO_URL($languages_id){
+        function __construct($languages_id){
             global $session_started, $SID;
 
                 $this->installer = new SEO_URL_INSTALLER;
