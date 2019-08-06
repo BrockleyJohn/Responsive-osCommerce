@@ -381,6 +381,18 @@
   }
 
   function tep_address_format($address_format_id, $address, $html, $boln, $eoln) {
+  // @BrockleyJohn - function amended to reverse engineer correct state presentation from address stored on order
+  	$countries = ['Australia'];
+	if (in_array($address['country'],$countries) && !array_key_exists('country_id',$address)) {
+		$result = tep_db_query('select countries_id, zone_id from countries, zones where zone_country_id = countries_id and countries_name = "'.tep_db_input($address['country']).'" and zone_name = "'.tep_db_input($address['state']).'"');
+		if (tep_db_num_rows($result)) {
+			$row = tep_db_fetch_array($result);
+			$address['country_id'] = $row['countries_id'];
+			$address['zone_id'] = $row['zone_id'];
+		}
+	}
+  // @BrockleyJohn - end of change
+
     $address_format_query = tep_db_query("select address_format as format from " . TABLE_ADDRESS_FORMAT . " where address_format_id = '" . (int)$address_format_id . "'");
     $address_format = tep_db_fetch_array($address_format_query);
 
