@@ -63,7 +63,7 @@
       return false;
     }
 
-    public static function ensure_order_status($constant_name, $order_status_name) {
+    public static function ensure_order_status($constant_name, $order_status_name, $public_flag = 0, $download_flag = 0) {
       if (defined($constant_name)) {
         return constant($constant_name);
       }
@@ -74,23 +74,25 @@
       if (tep_db_num_rows($check_query) < 1) {
         $column_names = '';
         $column_values = '';
-        $flags_query = tep_db_query("DESCRIBE orders_status public_flag");
+  /*    $flags_query = tep_db_query("DESCRIBE orders_status public_flag");
         if (tep_db_num_rows($flags_query) === 1) {
           $column_names = ', public_flag, downloads_flag';
           $column_values = ', 0 AS public_flag, 0 AS downloads_flag';
-        }
+        } */
 
         $next_id = tep_db_fetch_array(tep_db_query("SELECT MAX(orders_status_id) + 1 AS next_id FROM orders_status"))['next_id'] ?? 1;
 
         tep_db_query(sprintf(<<<'EOSQL'
-INSERT INTO orders_status (orders_status_id, language_id, orders_status_name%s)
+INSERT INTO orders_status (orders_status_id, language_id, orders_status_name, public_flag, downloads_flag)
  SELECT %d AS orders_status_id,
    l.languages_id AS language_id,
-   '%s' AS orders_status_name%s
+   '%s' AS orders_status_name, 
+   %s AS public_flag, 
+   %s AS downloads_flag
  FROM languages l
  ORDER BY l.sort_order
 EOSQL
-          , $column_names, (int)$next_id, tep_db_input($order_status_name), $column_values));
+          , (int)$next_id, tep_db_input($order_status_name), (int)$public_flag), (int)$download_flag));
 
         $check_query = tep_db_query($check_sql);
       }

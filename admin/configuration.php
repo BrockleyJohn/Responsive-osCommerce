@@ -69,7 +69,7 @@
                   }
                   $cfgValue = tep_call_function($class_method[1], $configuration['configuration_value'], ${$class_method[0]});
                 } else {
-                  if (function_exists($use_function)) { 
+                  if (is_callable($use_function)) { 
                     $cfgValue = tep_call_function($use_function, $configuration['configuration_value']);
                   }
                 }
