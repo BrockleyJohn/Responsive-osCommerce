@@ -1465,7 +1465,10 @@ EOSQL
 ////
 // Check if product has attributes
   function tep_has_product_attributes($products_id) {
-    return true;
+    $attributes_query = tep_db_query("SELECT COUNT(*) AS count FROM products_attributes WHERE products_id = " . (int)$products_id);
+    $attributes = tep_db_fetch_array($attributes_query);
+
+    return $attributes['count'] > 0;
   }
 
   function tep_block_form_processing() {

@@ -94,15 +94,18 @@
       if (!empty($attributes) && is_array($attributes)) {
         foreach ($attributes as $option => $value) {
           if (!is_numeric($option) || !is_numeric($value)) {
+            exit('cart 1');
             return;
           }
 
           $check_query = tep_db_query("SELECT products_attributes_id FROM products_attributes WHERE products_id = " . (int)$products_id . " AND options_id = " . (int)$option . " AND options_values_id = " . (int)$value . " LIMIT 1");
           if (tep_db_num_rows($check_query) < 1) {
+            exit('cart 2');
             return;
           }
         }
       } elseif (tep_has_product_attributes($products_id)) {
+            exit('cart 3 ' . $products_id);
         return;
       }
 
