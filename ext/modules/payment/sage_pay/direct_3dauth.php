@@ -38,11 +38,18 @@
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>">
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
-<body>
+<body><?php //exit(print_r($_SESSION, true)); ?>
 <form name="form" action="<?php echo $sage_pay_direct_acsurl; ?>" method="POST">
+<?php if (strlen($sage_pay_direct_creq)) { ?> 
+<input type="hidden" name="creq" value="<?php echo $sage_pay_direct_creq; ?>" />
+<!--input type="hidden" name="VPSTxId" value="<?php echo $_SESSION['VPSTxId']; ?>" />
+<input type="hidden" name="ACSTransID" value="<?php echo $_SESSION['ACSTransID']; ?>" />
+<input type="hidden" name="DSTransID" value="<?php echo $_SESSION['DSTransID']; ?>" /-->
+<?php } else { ?>
 <input type="hidden" name="PaReq" value="<?php echo $sage_pay_direct_pareq; ?>" />
-<input type="hidden" name="TermUrl" value="<?php echo tep_href_link('ext/modules/payment/sage_pay/redirect.php', '', 'SSL'); ?>" />
 <input type="hidden" name="MD" value="<?php echo $sage_pay_direct_md; ?>" />
+<?php } ?>
+<input type="hidden" name="TermUrl" value="<?php echo tep_href_link('ext/modules/payment/sage_pay/redirect.php', '', 'SSL'); ?>" />
 <noscript>
 <?php echo '<center><p>' . MODULE_PAYMENT_SAGE_PAY_DIRECT_3DAUTH_INFO . '</p><p><input type="submit" value="' . MODULE_PAYMENT_SAGE_PAY_DIRECT_3DAUTH_BUTTON . '"/></p></center>'; ?>
 </noscript>

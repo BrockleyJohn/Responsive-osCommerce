@@ -12,12 +12,15 @@
 
   class sage_pay_direct {
     var $code, $title, $description, $enabled;
+    
+    const DEBUG = true;
+    const MAGIC = ''; // 3dtest SUCCESSFULL/NOTAUTH/CHALLENGE/PROOFATTEMPT/NOTENROLLED/TECHDIFFICULTIES/ERROR
 
     function __construct() {
       global $PHP_SELF, $order;
 
-      $this->signature = 'sage_pay|sage_pay_direct|3.0|2.3';
-      $this->api_version = '3.00';
+      $this->signature = 'sage_pay|sage_pay_direct|4.0|2.3';
+      $this->api_version = '4.00';
 
       $this->code = 'sage_pay_direct';
       $this->title = MODULE_PAYMENT_SAGE_PAY_DIRECT_TEXT_TITLE;
@@ -110,7 +113,7 @@
 
     function pre_confirmation_check() {
       if ( $this->templateClassExists() ) {
-        $GLOBALS['oscTemplate']->addBlock($this->getSubmitCardDetailsJavascript(), 'header_tags');
+        $GLOBALS['oscTemplate']->addBlock($this->getSubmitCardDetailsJavascript(), 'footer_scripts');
       }
     }
 
@@ -231,7 +234,7 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $currency, $order_totals, $cartID, $sage_pay_response;
+      global $customer_id, $order, $currency, $order_totals, $cartID, $sage_pay_response, $sage_pay_direct_vpstxid;
 
       $transaction_response = null;
       $sage_pay_response = null;
@@ -239,16 +242,29 @@
       $error = null;
 
       if ( isset($_GET['check']) ) {
-        if ( ($_GET['check'] == '3D') && isset($_POST['MD']) && tep_not_null($_POST['MD']) && isset($_POST['PaRes']) && tep_not_null($_POST['PaRes']) ) {
+        if ( ($_GET['check'] == '3D') && ( (isset($_POST['cres']) && tep_not_null($_POST['cres'])) || (isset($_POST['MD']) && tep_not_null($_POST['MD']) && isset($_POST['PaRes']) && tep_not_null($_POST['PaRes'])) ) ) {
           if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER == 'Live' ) {
             $gateway_url = 'https://live.sagepay.com/gateway/service/direct3dcallback.vsp';
           } else {
             $gateway_url = 'https://test.sagepay.com/gateway/service/direct3dcallback.vsp';
           }
+          
+          if (isset($_POST['cres']) && tep_not_null($_POST['cres'])) {
+            
+            $post_string = 'VPSTxId=' . $sage_pay_direct_vpstxid . '&Cres=' . $_POST['cres'];
 
-          $post_string = 'MD=' . $_POST['MD'] . '&PARes=' . $_POST['PaRes'];
+          } else {
+            
+            $post_string = 'MD=' . $_POST['MD'] . '&PARes=' . $_POST['PaRes'];
+
+          }
+
+          if (static::DEBUG) error_log('3d callback req ' . print_r($post_string, true));
 
           $transaction_response = $this->sendTransactionToGateway($gateway_url, $post_string);
+
+          if (static::DEBUG) error_log('3d callback resp ' . print_r($transaction_response, true));
+
         } elseif ( ($_GET['check'] == 'PAYPAL') && isset($_POST['Status']) ) {
           if ( ($_POST['Status'] == 'PAYPALOK') && isset($_POST['VPSTxId']) && isset($_POST['CustomerEMail']) && isset($_POST['PayerID']) ) {
             $params = array('VPSProtocol' => $this->api_version,
@@ -412,7 +428,7 @@
           if ( $cc_type == 'PAYPAL' ) {
             $params['PayPalCallbackURL'] = tep_href_link('checkout_process.php', 'check=PAYPAL', 'SSL');
           } else {
-            $params['CardHolder'] = $cc_owner;
+            $params['CardHolder'] = (defined(static::MAGIC) && strlen(static::MAGIC) > 0 ? static::MAGIC : $cc_owner);
             $params['CardNumber'] = $cc_number;
             $params['ExpiryDate'] = $cc_expires;
             $params['CreateToken'] = ((MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True') && isset($_POST['cc_save']) && ($_POST['cc_save'] == 'true') ? '1' : '0');
@@ -431,6 +447,34 @@
           }
         }
 
+        if (isset($_POST['BrowserJavascriptEnabled'])) {
+          $params['BrowserJavascriptEnabled'] = 1;
+          $params['BrowserJavaEnabled'] = $_POST['BrowserJavaEnabled'] == 1 ? 1 : 0;
+          $params['BrowserColorDepth'] = filter_var($_POST['BrowserColorDepth'], FILTER_VALIDATE_INT);
+          $params['BrowserScreenHeight'] = filter_var($_POST['BrowserScreenHeight'], FILTER_VALIDATE_INT);
+          $params['BrowserScreenWidth'] = filter_var($_POST['BrowserScreenWidth'], FILTER_VALIDATE_INT);
+          switch (true) {
+            case $params['BrowserScreenWidth'] > 1000 :
+              $params['ChallengeWindowSize'] = '04';
+              break;
+            case $params['BrowserScreenWidth'] > 1200 :
+              $params['ChallengeWindowSize'] = '02';
+              break;
+            default :
+              $params['ChallengeWindowSize'] = '01';
+          }
+          $params['BrowserTZ'] = filter_var($_POST['BrowserTZ'], FILTER_VALIDATE_INT);
+          $params['BrowserLanguage'] = $_POST['BrowserLanguage'];
+        } else {
+          $params['BrowserJavascriptEnabled'] = filter_var(0, FILTER_VALIDATE_BOOLEAN);
+          $params['BrowserLanguage'] = 'en';
+        }
+
+        $params['BrowserAcceptHeader'] = !empty($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT'] : 'text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8';
+        $params['BrowserUserAgent']  = $_SERVER['HTTP_USER_AGENT'];
+        
+        $params['ThreeDSNotificationURL'] = tep_href_link('ext/modules/payment/sage_pay/redirect.php', '', 'SSL');
+   
         $ip_address = tep_get_ip_address();
 
         if ( !empty($ip_address) && (ip2long($ip_address) != -1) && (ip2long($ip_address) != false) ) {
@@ -478,6 +522,8 @@
         foreach ($params as $key => $value) {
           $post_string .= $key . '=' . urlencode(trim($value)) . '&';
         }
+        
+        if (static::DEBUG) error_log('req ' . print_r($params, true));
 
         if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER == 'Live' ) {
           $gateway_url = 'https://live.sagepay.com/gateway/service/vspdirect-register.vsp';
@@ -486,6 +532,9 @@
         }
 
         $transaction_response = $this->sendTransactionToGateway($gateway_url, $post_string);
+
+        if (static::DEBUG) error_log('resp ' . print_r($transaction_response, true));
+
       }
 
       $string_array = explode(chr(10), $transaction_response);
@@ -512,17 +561,22 @@
       }
 
       if ($sage_pay_response['Status'] == '3DAUTH') {
-        global $sage_pay_direct_acsurl, $sage_pay_direct_pareq, $sage_pay_direct_md;
+        global $sage_pay_direct_acsurl, $sage_pay_direct_pareq, $sage_pay_direct_md, $sage_pay_direct_creq, $sage_pay_direct_vpstxid;
 
         tep_session_register('sage_pay_direct_acsurl');
         $sage_pay_direct_acsurl = $sage_pay_response['ACSURL'];
-
+        
+        tep_session_register('sage_pay_direct_creq');
+        $sage_pay_direct_creq = (isset($sage_pay_response['CReq']) ? $sage_pay_response['CReq'] : '');
+        
+        tep_session_register('sage_pay_direct_vpstxid');
+        $sage_pay_direct_vpstxid = (isset($sage_pay_response['VPSTxId']) ? $sage_pay_response['VPSTxId'] : '');
+        
         tep_session_register('sage_pay_direct_pareq');
-        $sage_pay_direct_pareq = $sage_pay_response['PAReq'];
-
+        $sage_pay_direct_pareq = (isset($sage_pay_response['PAReq']) ? $sage_pay_response['PAReq'] : '');
+        
         tep_session_register('sage_pay_direct_md');
-        $sage_pay_direct_md = $sage_pay_response['MD'];
-
+        $sage_pay_direct_md = (isset($sage_pay_response['MD']) ? $sage_pay_response['MD'] : '');
         tep_redirect(tep_href_link('ext/modules/payment/sage_pay/checkout.php', '', 'SSL'));
       }
 
@@ -1305,6 +1359,64 @@ function sagepayShowNewCardFields() {
       $('#sagepay_card_issue').parent().parent().hide();
     }
   }
+}
+
+var paymentform = document.querySelector('form[name="checkout_confirmation"]');
+
+if (paymentform != null) {
+  //has javascript
+  var a = document.createElement("INPUT");
+  a.setAttribute("type", "hidden");
+  a.setAttribute("value", "1");
+  a.setAttribute("name", "BrowserJavascriptEnabled");
+  paymentform.appendChild(a);
+
+  //java?
+  var b = document.createElement("INPUT");
+  b.setAttribute("type", "hidden");
+  b.setAttribute("name", "BrowserJavaEnabled");
+  if(navigator.javaEnabled()){
+    b.setAttribute("value","1" );
+  } else{
+    b.setAttribute("value", "0");
+  }
+  paymentform.appendChild(b);
+
+  //BrowserColorDepth
+  var c = document.createElement("INPUT");
+  c.setAttribute("type", "hidden");
+  c.setAttribute("value", window.screen.colorDepth);
+  c.setAttribute("name", "BrowserColorDepth");
+  paymentform.appendChild(c);
+
+  //BrowserScreenHeight
+  var d = document.createElement("INPUT");
+  d.setAttribute("type", "hidden");
+  d.setAttribute("value", window.screen.height);
+  d.setAttribute("name", "BrowserScreenHeight");
+  paymentform.appendChild(d);
+
+  //BrowserScreenWidth
+  var e = document.createElement("INPUT");
+  e.setAttribute("type", "hidden");
+  e.setAttribute("value", window.screen.width);
+  e.setAttribute("name", "BrowserScreenWidth");
+  paymentform.appendChild(e);
+
+  //BrowserTZ
+  var tzoffset = new Date().getTimezoneOffset();
+  var f = document.createElement("INPUT");
+  f.setAttribute("type", "hidden");
+  f.setAttribute("value", tzoffset);
+  f.setAttribute("name", "BrowserTZ");
+  paymentform.appendChild(f);
+
+  //BrowserLanguage
+  var g = document.createElement("INPUT");
+  g.setAttribute("type", "hidden");
+  g.setAttribute("value", window.navigator.language);
+  g.setAttribute("name", "BrowserLanguage");
+  paymentform.appendChild(g);
 }
 </script>
 EOD;
