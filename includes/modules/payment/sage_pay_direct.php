@@ -428,7 +428,7 @@
           if ( $cc_type == 'PAYPAL' ) {
             $params['PayPalCallbackURL'] = tep_href_link('checkout_process.php', 'check=PAYPAL', 'SSL');
           } else {
-            $params['CardHolder'] = (defined(static::MAGIC) && strlen(static::MAGIC) > 0 ? static::MAGIC : $cc_owner);
+            $params['CardHolder'] = (defined('static::MAGIC') && strlen(static::MAGIC) > 0 ? static::MAGIC : $cc_owner);
             $params['CardNumber'] = $cc_number;
             $params['ExpiryDate'] = $cc_expires;
             $params['CreateToken'] = ((MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True') && isset($_POST['cc_save']) && ($_POST['cc_save'] == 'true') ? '1' : '0');
