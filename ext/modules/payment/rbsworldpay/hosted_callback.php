@@ -48,15 +48,15 @@
     exit();
   }
 
-  $order = tep_db_fetch_array($order_query);
+  $check_order = tep_db_fetch_array($order_query);
 
-  if ($order['orders_status'] == MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID) {
+  if ($check_order['orders_status'] == MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID) {
     $order_status_id = (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID);
 
-    tep_db_query("UPDATE orders SET orders_status = " . (int)$order_status_id . ", last_modified = NOW() WHERE orders_id = " . (int)$order['orders_id']);
+    tep_db_query("UPDATE orders SET orders_status = " . (int)$order_status_id . ", last_modified = NOW() WHERE orders_id = " . (int)$check_order['orders_id']);
 
     $sql_data = [
-      'orders_id' => $order['orders_id'],
+      'orders_id' => $check_order['orders_id'],
       'orders_status_id' => $order_status_id,
       'date_added' => 'NOW()',
       'customer_notified' => '0',
@@ -74,7 +74,7 @@
   }
 
   $sql_data = [
-    'orders_id' => $order['orders_id'],
+    'orders_id' => $check_order['orders_id'],
     'orders_status_id' => MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TRANSACTIONS_ORDER_STATUS_ID,
     'date_added' => 'NOW()',
     'customer_notified' => '0',
