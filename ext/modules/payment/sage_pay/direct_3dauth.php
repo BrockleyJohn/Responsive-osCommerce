@@ -29,6 +29,7 @@
 
   require('includes/languages/' . $language . '/checkout_confirmation.php');
   require('includes/languages/' . $language . '/modules/payment/sage_pay_direct.php');
+error_log('direct_3dauth ' . $sage_pay_direct_vpstxid);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html <?php echo HTML_PARAMS; ?>>
@@ -42,7 +43,7 @@
 <form name="form" action="<?php echo $sage_pay_direct_acsurl; ?>" method="POST">
 <?php if (strlen($sage_pay_direct_creq)) { ?> 
 <input type="hidden" name="creq" value="<?php echo $sage_pay_direct_creq; ?>" />
-<!--input type="hidden" name="VPSTxId" value="<?php echo $_SESSION['VPSTxId']; ?>" />
+<!--input type="hidden" name="VPSTxId" value="<?php echo $sage_pay_direct_vpstxid; ?>" />
 <input type="hidden" name="ACSTransID" value="<?php echo $_SESSION['ACSTransID']; ?>" />
 <input type="hidden" name="DSTransID" value="<?php echo $_SESSION['DSTransID']; ?>" /-->
 <?php } else { ?>

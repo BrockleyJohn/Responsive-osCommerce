@@ -14,7 +14,7 @@
     var $code, $title, $description, $enabled;
     
     const DEBUG = true;
-    const MAGIC = ''; // 3dtest SUCCESSFULL/NOTAUTH/CHALLENGE/PROOFATTEMPT/NOTENROLLED/TECHDIFFICULTIES/ERROR
+    const MAGIC = 'CHALLENGE'; // 3dtest SUCCESSFULL/NOTAUTH/CHALLENGE/PROOFATTEMPT/NOTENROLLED/TECHDIFFICULTIES/ERROR
 
     function __construct() {
       global $PHP_SELF, $order;
@@ -451,6 +451,7 @@
           $params['BrowserJavascriptEnabled'] = 1;
           $params['BrowserJavaEnabled'] = $_POST['BrowserJavaEnabled'] == 1 ? 1 : 0;
           $params['BrowserColorDepth'] = filter_var($_POST['BrowserColorDepth'], FILTER_VALIDATE_INT);
+          $params['BrowserColorDepth'] = ($params['BrowserColorDepth'] == 30 ? 24 : $params['BrowserColorDepth']);
           $params['BrowserScreenHeight'] = filter_var($_POST['BrowserScreenHeight'], FILTER_VALIDATE_INT);
           $params['BrowserScreenWidth'] = filter_var($_POST['BrowserScreenWidth'], FILTER_VALIDATE_INT);
           switch (true) {
